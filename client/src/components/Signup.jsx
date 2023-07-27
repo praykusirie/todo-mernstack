@@ -67,7 +67,7 @@ export const Signup = () => {
             </div>
             <div className='flex justify-between px-2 items-center pb-2'>
             <button className='py-3 px-2 bg-green-600 text-white rounded-lg outline-none w-2/4'>Login</button>
-            <Link to='/login' className='text-red-600'>Already registered??</Link>
+            <Link to='/' className='text-red-600'>Already registered??</Link>
             </div>
             </form>
         </section>
