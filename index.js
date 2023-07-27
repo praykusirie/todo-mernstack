@@ -8,7 +8,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 require("dotenv").config()
 const path = require('path')
-
+const PORT = process.env.PORT || 5000
 const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -23,7 +23,17 @@ app.use(bodyParser.json())
 app.use(express.json({ extended: true }))
 
 
-mongoose.connect(process.env.DATABASE, options)
+
+
+const connectDb = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.DATABASE, options)
+        console.log('Connected to the mongodb')
+    } catch (error) {
+        console.log(error)
+        process.exit(1)
+    }
+}
 
 app.use(taskRoute)
 
@@ -42,13 +52,9 @@ app.get("*", function (_, res) {
 
 
 //Listening when we are connected in our database and if not getting noticable error
-mongoose.connection.on('open', () => {
-    try {
-        console.log('Connected to the mongodb')
-        app.listen(process.env.PORT, () => console.log(`Server is runnign at port ${process.env.PORT}`))
-
-    } catch (error) {
-        console.log(error.message)
-    }
+connectDb().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`)
+    })
 })
 
