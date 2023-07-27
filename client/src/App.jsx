@@ -17,11 +17,11 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='' element={<PrivateRoute />}>
-            <Route path='/' element={<AllTasks />}/>
-          </Route>
+          <Route path='/' element={<Login />}/>
           <Route path='/signup' element={<Signup />}/>
-          <Route path='/login' element={<Login />}/>
+          <Route path='' element={<PrivateRoute />}>
+            <Route path='/tasks' element={<AllTasks />}/>
+          </Route>
         </Routes>
       </BrowserRouter>
       <ToastContainer />

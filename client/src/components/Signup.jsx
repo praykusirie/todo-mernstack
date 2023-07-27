@@ -29,7 +29,7 @@ export const Signup = () => {
                 token: response.data.token
             }))
 
-            navigate('/')
+            navigate('/tasks')
             setPassword('')
             setUsername('')
         } catch (error) {

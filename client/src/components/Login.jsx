@@ -28,7 +28,7 @@ export const Login = () => {
                 token: response.data.token
             }))
 
-            navigate('/')
+            navigate('/tasks')
             setPassword('')
             setUsername('')
         } catch (error) {
