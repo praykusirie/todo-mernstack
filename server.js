@@ -23,9 +23,10 @@ app.use(bodyParser.json())
 app.use(express.json())
 
 
+mongoose.connect(process.env.DATABASE, options)
+
 app.use(taskRoute)
 
-mongoose.connect(process.env.DATABASE, options)
 
 app.use(express.static(path.join(__dirname, "./client/dist")))
 
