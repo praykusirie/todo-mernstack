@@ -6,7 +6,7 @@ export const PrivateRoute = () => {
     const user = JSON.parse(localStorage.getItem('user'))
     
   return (
-    user?.username ? <Outlet /> : <Navigate to='/login' replace />
+    user?.username ? <Outlet /> : <Navigate to='/' replace />
   )
 }
 

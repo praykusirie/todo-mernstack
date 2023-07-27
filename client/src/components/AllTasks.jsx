@@ -26,7 +26,7 @@ export const AllTasks = () => {
 
    const handleLogout = () => {
     localStorage.clear()
-    navigate('/login')
+    navigate('/')
    }
 
     if(isLoading) {
