@@ -3,7 +3,7 @@ import axios from 'axios'
 
 
 
-const URL = 'http://localhost:3000/gettask'
+const URL = '/gettask'
 const user = JSON.parse(localStorage.getItem('user'))
 
 
