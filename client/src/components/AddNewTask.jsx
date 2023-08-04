@@ -1,36 +1,27 @@
-import React, { createContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
-import { useDispatch } from 'react-redux'
 import { EditTask } from './EditTask'
 import { ShareTask } from './ShareTask'
-import axios from 'axios'
 import { toast } from 'react-toastify'
-import { getAllTasks } from '../slices/taskApiSlice'
+import { useCompletedTodoMutation, useDeleteTodoMutation } from '../features/slice/tasksApiSlice'
+
 
 
 export const AddNewTask = ({ singleTask, tasks }) => {
     const [openEdit, setEdit ] = useState(false)
     const [openEmail, setOpenEmail ] = useState(false)
-    const [ id, setId ] = useState('')
-    const dispatch = useDispatch()
+    const [ completedTodo ] = useCompletedTodoMutation()
+    const [ deleteTodo ] = useDeleteTodoMutation()
     
 
     
-    const { token } = JSON.parse(localStorage.getItem('user'))
     const { _id, task, status } = singleTask
 
     const deleteSingleTask = async (_id) => {
       try {
-        const response = await axios.post('/deletetask', { _id }, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        if(response.status === 200) {
-            toast.success(response.data.message)
-        }
-        dispatch(getAllTasks())
-        
+        deleteTodo(_id)
+        toast.success('Task deleted succesfully')
+       
     } catch (error) {
         console.log(error)
     }
@@ -40,39 +31,22 @@ export const AddNewTask = ({ singleTask, tasks }) => {
     const handleCheckBox = async (e) => {
       const { checked } = e.target
         if(checked) {
-          
           try {
               const currentStatus = 'Completed'
               const updatedStatus = { _id, status: currentStatus}
-              const response = await axios.put('/updatestatus', updatedStatus, {
-                headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-              })
-              if(response.status === 200) {
-                  toast.success(response.data.message)
-              }
-             
-              dispatch(getAllTasks())
+              completedTodo(updatedStatus)
+              toast.success('Task completed')
               
           } catch (error) {
               console.log(error)
-              toast.error(error.response.data.message)
+              toast.error('Task is already completed')
 
               
           }
         } 
     }
 
-      if (!singleTask) {
-          return (
-              <>
-                  <p className='text-center text-2xl font-semibold py-2'>No added task</p>
-              </>
-          )
-      }
-
-    
+      
   return (
     <>
     { tasks.length > 0 ? (

@@ -43,7 +43,6 @@ const signUp = expressAsyncHandler( async (req, res) => {
     const saveUser = await user.save()
     res.status(200).json({
         message: 'User registered succesfully',
-        id: saveUser._id,
         username: saveUser.username,
         token
 
@@ -89,7 +88,6 @@ const signIn = expressAsyncHandler( async (req, res) => {
     if(user && isPasswordCorrect) {
         res.status(200).json({
             message: 'Logged in succesfully',
-            id: user._id,
             username: user.username,
             token  
 
@@ -97,13 +95,33 @@ const signIn = expressAsyncHandler( async (req, res) => {
     } else {
         return res.status(404).json({
             message: 'Invalid email or password',
-            id: user._id,
-            username: user.username
          })
     }
 })
 
+const getSingleUser = expressAsyncHandler(async (req, res) => {
+
+    const user_id = req.user._id
+    const username = await User.findById(user_id).select('username')
+    res.status(200).json({
+        username
+    })
+})
+
+const logOut = expressAsyncHandler( async (req, res) => {
+    res.cookie('token', '', {
+        httpOnly: true,
+        expires: new Date(0), //this is same as one day
+       
+    })
+    res.status(200).json({
+        message: 'User logged out succesfully'
+    })
+})
+
 module.exports = {
     signUp,
-    signIn
+    signIn,
+    logOut,
+    getSingleUser
 }

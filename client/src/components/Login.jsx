@@ -1,14 +1,17 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+
+
 
 
 export const Login = () => {
     const [username, setUsername ] = useState('')
     const [password, setPassword ] = useState('')
     const navigate = useNavigate()
-    
+    const dispatch = useDispatch()
     
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -23,11 +26,10 @@ export const Login = () => {
             const response = await axios.post('/signin', data)
             toast.success(response.data.message)
             localStorage.setItem('user', JSON.stringify({
-                id: response.data.id,
-                username: response.data.username,
-                token: response.data.token
+                username: response?.data?.username,
             }))
-
+            
+           
             navigate('/tasks')
             setPassword('')
             setUsername('')

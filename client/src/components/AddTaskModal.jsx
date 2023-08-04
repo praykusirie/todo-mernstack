@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { getAllTasks } from '../slices/taskApiSlice'
+import { useAddNewTaskMutation } from '../features/slice/tasksApiSlice'
 
 
 
@@ -10,8 +8,7 @@ export const AddTaskModal = ({ openModal, setModal }) => {
 
     const [task, setTask ] = useState('')
     const [time, setTime ] = useState('')
-    const dispatch = useDispatch()
-    const { id, token } = JSON.parse(localStorage.getItem('user'))
+    const [ addNewTask ] = useAddNewTaskMutation()
 
     const handleNewTask = async (e) => {
         e.preventDefault()
@@ -23,15 +20,9 @@ export const AddTaskModal = ({ openModal, setModal }) => {
             }
             const status = 'Incomplete'
             const newTask = { task, time, status }
-            const response = await axios.post('/newtask', newTask, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            if(response.status === 200) {
-                toast.success('Task added succesfully')
-            }
-            dispatch(getAllTasks())
+            addNewTask(newTask)
+            toast.success('Task added succesfully')
+            
             setModal(false)
             setTask('')
             setTime('')

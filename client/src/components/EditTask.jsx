@@ -1,44 +1,34 @@
-import React, { useContext, useEffect, useState } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { getAllTasks } from '../slices/taskApiSlice'
-import { useDispatch } from 'react-redux'
+
+import { useUpdateTodoMutation } from '../features/slice/tasksApiSlice'
 
 
 export const EditTask = ({ openEdit, setEdit, _id }) => {
     const [editedTask, setEditedTask ] = useState('')
     const [editTime, setEditTime ] = useState('')
+    const [ updateTodo ] = useUpdateTodoMutation()
 
-    const dispatch = useDispatch()
-    const { token } = JSON.parse(localStorage.getItem('user'))
+    
 
     const handleSubmittedTask = async (e) => {
         e.preventDefault()
         
         try {
             const updatedVal = { task: editedTask, time: editTime, _id: _id } 
-            const response = await axios.put('/updatetask',updatedVal, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            console.log(response)
-            if(response.status === 200) {
-                toast.success(response.data.message)
-            }
+            updateTodo(updatedVal)
+            toast.success('Task updated succesfully')
             
-            dispatch(getAllTasks())
             setEdit(false)
             setEditTime('')
             setEditedTask('')
             
         } catch (error) {
             console.log(error)
-            toast.error(error.response.data.message)
+            toast.error('Cannot update a completed task')
             setEdit(false)
         }
         
-        // dispatch(getAllTasks())
     }
     
   return (

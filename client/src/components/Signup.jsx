@@ -24,9 +24,7 @@ export const Signup = () => {
             const response = await axios.post('/signup', data)
             toast.success(response.data.message)
             localStorage.setItem('user', JSON.stringify({
-                id: response.data.id,
                 username: response.data.username,
-                token: response.data.token
             }))
 
             navigate('/tasks')
@@ -65,9 +63,9 @@ export const Signup = () => {
                     onChange={(e) => setPassword(e.target.value)}/>
                 </div>
             </div>
-            <div className='flex justify-between px-2 items-center pb-2'>
-            <button className='py-3 px-2 bg-green-600 text-white rounded-lg outline-none w-2/4'>Login</button>
-            <Link to='/' className='text-red-600'>Already registered??</Link>
+            <div className='flex justify-between px-1 items-center pb-2 '>
+            <button className='py-3 px-2 bg-green-600 text-white rounded-lg outline-none w-2/4'>Signup</button>
+            <Link to='/' className='text-red-600 '>Already registered??</Link>
             </div>
             </form>
         </section>

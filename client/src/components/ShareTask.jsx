@@ -1,25 +1,20 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useShareTodoMutation } from '../features/slice/tasksApiSlice'
 
-// import nodemailer from 'nodemailer'
+
 
 
 export const ShareTask = ({ openEmail, setOpenEmail, _id }) => {
      const [sharedEmail, setSharedEmail ] = useState('')
-     const { token } = JSON.parse(localStorage.getItem('user'))
+     const [ shareTodo ] = useShareTodoMutation()
 
 
     const handleEmailedTask = async (e) => {
         e.preventDefault()
         try {
             const share = { _id, email: sharedEmail}
-            const response = await axios.post('/shareemail', share, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            console.log(response)
+            shareTodo(share)
             setOpenEmail(false)
             setSharedEmail('')
             toast.success('Task shared succesfully')

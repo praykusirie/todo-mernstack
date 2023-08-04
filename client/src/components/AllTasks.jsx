@@ -1,31 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch, useSelector } from 'react-redux'
 import { AddNewTask } from './AddNewTask'
 import { MutatingDots } from 'react-loader-spinner'
 import { AddTaskModal } from './AddTaskModal';
-import { getAllTasks } from '../slices/taskApiSlice';
 import { useNavigate } from 'react-router-dom';
-
+import { useGetAvailableTasksQuery, useLogoutUserMutation } from '../features/slice/tasksApiSlice';
 
 
 export const AllTasks = () => {
     const [openModal, setModal] = useState(false)
     const [ selection, setSelection ] = useState('')
+    const [ logoutUser ] = useLogoutUserMutation()
 
-    const { tasks, isLoading, isError } = useSelector((store) => store.task)
-    
-    const dispatch = useDispatch()
+
+    const { data: tasks, error, isLoading, isError } = useGetAvailableTasksQuery()
     const navigate = useNavigate()
-    const { username } = JSON.parse(localStorage.getItem('user'))
-
-     useEffect(() => {
-       dispatch(getAllTasks())
-     }, [])
-  
+    const { username } = JSON.parse(localStorage.getItem('user'))  
 
    const handleLogout = () => {
     localStorage.clear()
+    logoutUser()
     navigate('/')
    }
 
@@ -52,7 +46,7 @@ export const AllTasks = () => {
     if(isError) {
       return (
         <>
-          <p className='text-center text-2xl font-semibold py-2'>Somethong is wrong please try again</p>
+          <p className='text-center text-2xl font-semibold py-2'>Somethong is wrong please refresh the page</p>
         </>
       )
     }
@@ -72,6 +66,7 @@ export const AllTasks = () => {
             onClick={() => setModal(true)}>Add Task</button>
               <select name="" id="" className='bg-[#e7e4e4] border px-5 py-2 outline-none'
               value={selection} onChange={ (e) => setSelection(e.target.value)}>
+                <option selected disabled>Select task status</option>
                 <option value="All">All</option>
                 <option value="Incomplete">Incomplete</option>
                 <option value="Completed">Completed</option>
